@@ -20,15 +20,30 @@ async function api<T>(action: string, body: Record<string, any>): Promise<T> {
     return json.data;
 }
 
+async function apiAuth(action: string, body: Record<string, any>): Promise<boolean> {
+    const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ action, ...body })
+    });
+    if (!res.ok) {
+        return false;
+    }
+    const json = await res.json();
+    return json.success;
+}
+
 
 export const StorageService = {
   // --- Auth Methods ---
   register: async (user: User): Promise<boolean> => {
-    return await api('register', user);
+    return await apiAuth('register', user);
   },
 
   login: async (user: User): Promise<boolean> => {
-    return await api('login', user);
+    return await apiAuth('login', user);
   },
 
   // --- Resume Data Methods ---
