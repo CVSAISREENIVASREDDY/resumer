@@ -13,8 +13,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     case 'POST':
       switch (action) {
         case 'register':
+          console.log('Registering user:', username);
           const users = db.collection<User>('users');
           const existingUser = await users.findOne({ username });
+          console.log('Existing user:', existingUser);
           if (existingUser) {
             return res.status(400).json({ success: false, message: 'User exists' });
           }
